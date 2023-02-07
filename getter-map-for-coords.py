@@ -2,9 +2,9 @@ from io import BytesIO
 import requests
 
 
-def params(coords: int, scale: int = 2) -> BytesIO:
+def map_for_coords(coords: list, scale: float = 2) -> BytesIO:
     '''
-    :param coords: object coordinates
+    :param coords: object coordinates [x, y]
     :param scale: scale image (1-4)
     :return: BytesIO map
     '''
@@ -14,7 +14,7 @@ def params(coords: int, scale: int = 2) -> BytesIO:
 
     # params for search in static-maps
     map_params = {
-        "ll": coords,
+        "ll": ','.join(str(i) for i in coords),
         "l": "map",
         "scale": str(scale)
     }
