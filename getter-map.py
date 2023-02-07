@@ -69,7 +69,7 @@ def search_name(obj: str,
     dx = str(abs(tp[0][0] - tp[1][0]))
     dy = str(abs(tp[0][1] - tp[1][1]))
 
-    # # params for search in static-maps
+    # params for search in static-maps
     map_params = {
         "spn": ",".join([dx, dy]),
         "pt": f"{toponym['Point']['pos'].replace(' ', ',')},round"
