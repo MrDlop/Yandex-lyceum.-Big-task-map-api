@@ -1,5 +1,7 @@
 import sys
 
+from PyQt5 import QtGui
+from PyQt5.QtCore import Qt
 from PIL.ImageQt import ImageQt
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap
@@ -14,17 +16,35 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.coord_x, self.coord_y = 0, 0
+        self.scale = 1
 
         self.pushButton_searh.clicked.connect(self.pushButton_searh_clicked)
 
     def pushButton_searh_clicked(self):
         self.refactor_coords()
-        image = map_for_coords([self.coord_x, self.coord_y])
+        image = map_for_coords([self.coord_x, self.coord_y], scale=self.scale)
         image = Image.open(image)
         self.label_map.setPixmap(QPixmap.fromImage(ImageQt(image)))
 
     def refactor_coords(self):
         self.coord_x, self.coord_y = map(float, self.lineEdit_search.text().split(","))
+
+    def keyPressEvent(self, a0: QtGui.QKeyEvent) -> None:
+        if a0.key() == Qt.Key_PageUp:
+            self.scale += 0.1
+            if self.scale > 4:
+                self.scale = 4
+            image = map_for_coords([self.coord_x, self.coord_y], scale=self.scale)
+            image = Image.open(image)
+            self.label_map.setPixmap(QPixmap.fromImage(ImageQt(image)))
+
+        if a0.key() == Qt.Key_PageDown:
+            self.scale -= 0.1
+            if self.scale < 1:
+                self.scale = 1
+            image = map_for_coords([self.coord_x, self.coord_y], scale=self.scale)
+            image = Image.open(image)
+            self.label_map.setPixmap(QPixmap.fromImage(ImageQt(image)))
 
 
 if __name__ == '__main__':
