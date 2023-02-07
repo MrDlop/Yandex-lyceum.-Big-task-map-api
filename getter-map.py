@@ -35,8 +35,10 @@ def map_for_coords(coords: list[float, float],
 
 def search_name(obj: str,
                 scale: float = 2,
-                type_map: str = "map") -> BytesIO:
+                type_map: str = "map",
+                point: bool = True) -> BytesIO:
     """
+    :param point: point for object
     :param type_map: map/sat/skl/trf
     :param scale: scale image (1-4)
     :param obj: name object (for example: "Уфа")
@@ -61,21 +63,62 @@ def search_name(obj: str,
     toponym = json_response["response"]["GeoObjectCollection"][
         "featureMember"][0]["GeoObject"]
     # coords center
-    toponym_coodrinates = toponym["Point"]["pos"]
+    toponym_coordinates = toponym["Point"]["pos"]
     # latitude and longitude
-    toponym_longitude, toponym_latitude = toponym_coodrinates.split(" ")
+    toponym_longitude, toponym_latitude = toponym_coordinates.split(" ")
 
     tp = [list(map(float, toponym['boundedBy']['Envelope'][i].split())) for i in toponym['boundedBy']['Envelope']]
     dx = str(abs(tp[0][0] - tp[1][0]))
     dy = str(abs(tp[0][1] - tp[1][1]))
 
-    # params for search in static-maps
+    # # params for search in static-maps
     map_params = {
         "spn": ",".join([dx, dy]),
-        "pt": f"{toponym['Point']['pos'].replace(' ', ',')},round"
     }
+
+    if point:
+        map_params["pt"] = f"{toponym['Point']['pos'].replace(' ', ',')},round"
 
     return map_for_coords([toponym_longitude, toponym_latitude],
                           scale=scale,
                           type_map=type_map,
                           **map_params)
+
+
+def toponym_obj(obj: str) -> dict:
+    """
+    :param obj: object
+    :return: toponym object
+    """
+    geocoder_api_server = "http://geocode-maps.yandex.ru/1.x/"
+
+    geocoder_params = {
+        "apikey": "40d1649f-0493-4b70-98ba-98533de7710b",
+        "geocode": obj,
+        "format": "json"}
+
+    response = requests.get(geocoder_api_server, params=geocoder_params)
+
+    json_response = response.json()
+
+    toponym = json_response["response"]["GeoObjectCollection"][
+        "featureMember"][0]["GeoObject"]
+    return toponym
+
+
+def address_obj(obj: str) -> str:
+    """
+    :param obj: object
+    :return: full formatted address
+    """
+    toponym = toponym_obj(obj)
+    return toponym['metaDataProperty']['GeocoderMetaData']['Address']['formatted']
+
+
+def postal_number_obj(obj: str) -> str:
+    """
+    :param obj: object
+    :return: postal number address
+    """
+    toponym = toponym_obj(obj)
+    return toponym['metaDataProperty']['GeocoderMetaData']['Address']['postal_code']
