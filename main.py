@@ -34,17 +34,24 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.scale += 0.1
             if self.scale > 4:
                 self.scale = 4
-            image = map_for_coords([self.coord_x, self.coord_y], scale=self.scale)
-            image = Image.open(image)
-            self.label_map.setPixmap(QPixmap.fromImage(ImageQt(image)))
 
         if a0.key() == Qt.Key_PageDown:
             self.scale -= 0.1
             if self.scale < 1:
                 self.scale = 1
-            image = map_for_coords([self.coord_x, self.coord_y], scale=self.scale)
-            image = Image.open(image)
-            self.label_map.setPixmap(QPixmap.fromImage(ImageQt(image)))
+
+        if a0.key() == Qt.Key_Up:
+            self.coord_y = (self.coord_y + 5 + 90) % 180 - 90
+        if a0.key() == Qt.Key_Down:
+            self.coord_y = (self.coord_y - 5 + 90) % 180 - 90
+        if a0.key() == Qt.Key_Left:
+            self.coord_x = (self.coord_x + 5) % 180
+        if a0.key() == Qt.Key_Right:
+            self.coord_x = (self.coord_x - 5) % 180
+
+        image = map_for_coords([self.coord_x, self.coord_y], scale=self.scale)
+        image = Image.open(image)
+        self.label_map.setPixmap(QPixmap.fromImage(ImageQt(image)))
 
 
 if __name__ == '__main__':
