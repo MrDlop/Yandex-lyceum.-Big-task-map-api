@@ -1,1 +1,1 @@
-# Yandex-lyceum.-Big-task-map-api
+# Yandex-lyceum.Big-task-map-api
