@@ -3,9 +3,10 @@ import requests
 from typing import Tuple
 
 
-def map_for_coords(
-    coords: Tuple[float, float], scale: float = 2, type_map: str = "map", **kwargs
-) -> BytesIO:
+def map_for_coords(coords: Tuple[float, float],
+                   scale: float = 2,
+                   type_map: str = "sat",
+                   **kwargs):
     """
     :param coords: object coordinates (x, y)
     :param scale: scale image (1-4)
@@ -19,17 +20,21 @@ def map_for_coords(
 
     # params for search in static-maps
     map_params = {
-        "ll": ",".join(str(i) for i in coords),
-        "l": type_map,
-        "scale": str(scale),
+        "ll": ','.join(str(i) for i in coords),
+        "l": "sat",
+        "scale": str(scale)
     }
     for i in kwargs:
         map_params[i] = kwargs[i]
 
     # service call
     response = requests.get(map_api_server, params=map_params)
+    if type_map == "sat":
+        # save image in file
+        pass
 
-    return BytesIO(response.content)
+    return BytesIO(
+        response.content)
 
 
 def search_name(obj: str) -> Tuple[float, float]:
@@ -45,8 +50,7 @@ def search_name(obj: str) -> Tuple[float, float]:
     geocoder_params = {
         "apikey": "40d1649f-0493-4b70-98ba-98533de7710b",
         "geocode": obj,
-        "format": "json",
-    }
+        "format": "json"}
 
     # service call
     response = requests.get(geocoder_api_server, params=geocoder_params)
@@ -54,11 +58,10 @@ def search_name(obj: str) -> Tuple[float, float]:
     json_response = response.json()
 
     # cut json response
-    toponym = json_response["response"]["GeoObjectCollection"]["featureMember"][0][
-        "GeoObject"
-    ]
+    toponym = json_response["response"]["GeoObjectCollection"][
+        "featureMember"][0]["GeoObject"]
 
-    return toponym["Point"]["pos"]
+    return toponym['Point']['pos']
 
 
 def toponym_obj(obj: str) -> dict:
@@ -71,16 +74,14 @@ def toponym_obj(obj: str) -> dict:
     geocoder_params = {
         "apikey": "40d1649f-0493-4b70-98ba-98533de7710b",
         "geocode": obj,
-        "format": "json",
-    }
+        "format": "json"}
 
     response = requests.get(geocoder_api_server, params=geocoder_params)
 
     json_response = response.json()
 
-    toponym = json_response["response"]["GeoObjectCollection"]["featureMember"][0][
-        "GeoObject"
-    ]
+    toponym = json_response["response"]["GeoObjectCollection"][
+        "featureMember"][0]["GeoObject"]
     return toponym
 
 
@@ -90,7 +91,7 @@ def address_obj(obj: str) -> str:
     :return: full formatted address
     """
     toponym = toponym_obj(obj)
-    return toponym["metaDataProperty"]["GeocoderMetaData"]["Address"]["formatted"]
+    return toponym['metaDataProperty']['GeocoderMetaData']['Address']['formatted']
 
 
 def postal_number_obj(obj: str) -> str:
@@ -99,4 +100,4 @@ def postal_number_obj(obj: str) -> str:
     :return: postal number address
     """
     toponym = toponym_obj(obj)
-    return toponym["metaDataProperty"]["GeocoderMetaData"]["Address"]["postal_code"]
+    return toponym['metaDataProperty']['GeocoderMetaData']['Address']['postal_code']
