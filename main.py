@@ -29,7 +29,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.pushButton_searh.clicked.connect(self.pushButton_search_clicked)
 
     def refactor_coords(self):
-        self.coord_x, self.coord_y = map(float, self.lineEdit_search.text().split(","))
+        self.coord_y, self.coord_x = map(float, self.lineEdit_search.text().split(","))
 
     def update(self):
         options = dict()
@@ -57,11 +57,11 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             if self.scale < 1:
                 self.scale = 1
 
-        if a0.key() == Qt.Key_Up:
+        if a0.key() == Qt.Key_Up or a0.key() == Qt.Key_8:
             self.coord_y = self.coord_y + 0.0001
             if self.coord_y > 90:
                 self.coord_y = 90
-        if a0.key() == Qt.Key_Down:
+        if a0.key() == Qt.Key_Down or a0.key() == Qt.Key_2:
             self.coord_y = self.coord_y - 0.0001
             if self.coord_y < -90:
                 self.coord_y = -90
@@ -89,7 +89,6 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def delete_search(self):
         self.point = None
         self.update()
-
     # -------------------------------------------------------------------------------
 
 
