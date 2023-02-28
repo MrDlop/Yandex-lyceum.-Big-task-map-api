@@ -31,6 +31,8 @@ def map_for_coords(coords: Tuple[float, float],
     response = requests.get(map_api_server, params=map_params)
     if type_map == "sat":
         # save image in file
+        #with open(filename, 'wb') as f: 
+         # f.write(filebytes)
         pass
 
     return BytesIO(
