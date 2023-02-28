@@ -1,3 +1,4 @@
+import os
 import sys
 
 from PyQt5 import QtGui
@@ -9,6 +10,7 @@ from PIL import Image
 
 from getter_map import *
 from interface.interface_main import Ui_MainWindow
+from settings_main import SettingsForm
 
 
 class MyWidget(QMainWindow, Ui_MainWindow):
@@ -23,10 +25,11 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
         self.coord_x, self.coord_y = 55.958736, 54.735152
         self.point = None
-        self.type_map = "map"
+        self.type_map = "sat"
         self.scale = 1
 
         self.pushButton_searh.clicked.connect(self.pushButton_search_clicked)
+        self.pushButton_settings.clicked.connect(self.pushButton_settings_clicked)
 
     def refactor_coords(self):
         self.coord_y, self.coord_x = map(float, self.lineEdit_search.text().split(","))
@@ -45,6 +48,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def pushButton_search_clicked(self):
         self.refactor_coords()
         self.update()
+
+    def pushButton_settings_clicked(self):
+        self.form = SettingsForm(self)
+        self.form.show()
 
     def keyPressEvent(self, a0: QtGui.QKeyEvent) -> None:
         if a0.key() == Qt.Key_PageUp:
@@ -94,6 +101,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.addLibraryPath(os.getcwd() + "imageformats")
     ex = MyWidget()
     ex.show()
     sys.exit(app.exec_())
