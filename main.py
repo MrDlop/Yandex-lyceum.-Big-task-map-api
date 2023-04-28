@@ -33,7 +33,9 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.update()
 
     def refactor_coords(self):
-        self.coord_y, self.coord_x = map(float, self.lineEdit_search.text().split(","))
+        self.point = search_name(self.lineEdit_search.text())
+        self.coord_x, self.coord_y = self.point
+        self.update()
 
     def update(self):
         options = dict()
