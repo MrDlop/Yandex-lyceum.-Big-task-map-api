@@ -23,13 +23,14 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
 
-        self.coord_x, self.coord_y = 55.958736, 54.735152
+        self.coord_x, self.coord_y = 37.677751, 55.757718
         self.point = None
-        self.type_map = "sat"
+        self.type_map = "map"
         self.scale = 1
 
         self.pushButton_searh.clicked.connect(self.pushButton_search_clicked)
         self.pushButton_settings.clicked.connect(self.pushButton_settings_clicked)
+        self.update()
 
     def refactor_coords(self):
         self.coord_y, self.coord_x = map(float, self.lineEdit_search.text().split(","))
@@ -38,10 +39,11 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         options = dict()
         if not (self.point is None):
             options["pt"] = f"{','.join(str(i) for i in self.point)},round"
-        image = map_for_coords((self.coord_x, self.coord_y),
-                               type_map=self.type_map,
-                               scale=self.scale,
-                               **options)
+
+        image = BytesIO(map_for_coords((self.coord_x, self.coord_y),
+                                       type_map=self.type_map,
+                                       scale=self.scale,
+                                       **options).content)
         image = Image.open(image)
         self.label_map.setPixmap(QPixmap.fromImage(ImageQt(image)))
 
@@ -63,25 +65,31 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.scale -= 0.1
             if self.scale < 1:
                 self.scale = 1
+            self.update()
 
         if a0.key() == Qt.Key_Up or a0.key() == Qt.Key_8:
             self.coord_y = self.coord_y + 0.0001
             if self.coord_y > 90:
                 self.coord_y = 90
+            self.update()
+
         if a0.key() == Qt.Key_Down or a0.key() == Qt.Key_2:
             self.coord_y = self.coord_y - 0.0001
             if self.coord_y < -90:
                 self.coord_y = -90
+            self.update()
+
         if a0.key() == Qt.Key_Right or a0.key() == Qt.Key_6:
             self.coord_x = self.coord_x + 0.0001
             if self.coord_x > 90:
                 self.coord_x = -90
+            self.update()
+
         if a0.key() == Qt.Key_Left or a0.key() == Qt.Key_4:
             self.coord_x = self.coord_x - 0.0001
             if self.coord_x < -90:
                 self.coord_x = 90
-
-        self.update()
+            self.update()
 
     # No active prototype
     # -------------------------------------------------------------------------------
