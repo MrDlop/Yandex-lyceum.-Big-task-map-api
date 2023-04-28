@@ -21,7 +21,7 @@ def map_for_coords(coords: Tuple[float, float],
     # params for search in static-maps
     map_params = {
         "ll": ','.join(str(i) for i in coords),
-        "l": "sat",
+        "l": type_map,
         "scale": str(scale)
     }
     for i in kwargs:
@@ -29,14 +29,8 @@ def map_for_coords(coords: Tuple[float, float],
 
     # service call
     response = requests.get(map_api_server, params=map_params)
-    if type_map == "sat":
-        # save image in file
-        #with open(filename, 'wb') as f: 
-         # f.write(filebytes)
-        pass
 
-    return BytesIO(
-        response.content)
+    return response
 
 
 def search_name(obj: str) -> Tuple[float, float]:
