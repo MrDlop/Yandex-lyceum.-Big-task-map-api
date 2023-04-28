@@ -1,7 +1,7 @@
 import os
 import sys
 
-from PyQt5 import QtGui
+from PyQt5 import QtGui, uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap
@@ -9,11 +9,11 @@ from PIL.ImageQt import ImageQt
 from PIL import Image
 
 from getter_map import *
-from interface.interface_main import Ui_MainWindow
+# from interface.interface_main import Ui_MainWindow
 from settings_main import SettingsForm
 
 
-class MyWidget(QMainWindow, Ui_MainWindow):
+class MyWidget(QMainWindow):
     scale: float
     coord_x: float
     coord_y: float
@@ -21,7 +21,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setupUi(self)
+        uic.loadUi('interface/interface_main.ui', self)
 
         self.coord_x, self.coord_y = 37.677751, 55.757718
         self.point = None
@@ -34,7 +34,9 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.update()
 
     def refactor_coords(self):
-        self.point = search_name(self.lineEdit_search.text())
+        toponym = toponym_obj(self.lineEdit_search.text())
+        self.point = search_coords_for_name(self.lineEdit_search.text())
+        self.label.setText(toponym['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['AddressLine'])
         self.coord_x, self.coord_y = self.point
         self.update()
 
@@ -56,6 +58,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
     def pushButton_cancel_clicked(self):
         self.point = None
+        self.label.setText("")
         self.update()
 
     def pushButton_settings_clicked(self):
@@ -105,7 +108,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.update()
 
     def add_search(self):
-        self.point = search_name(self.sender().text())
+        self.point = search_coords_for_name(self.sender().text())
         self.update()
 
     def delete_search(self):
