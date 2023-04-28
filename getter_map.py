@@ -33,33 +33,6 @@ def map_for_coords(coords: Tuple[float, float],
     return response
 
 
-def search_name(obj: str) -> List[float]:
-    """
-    :param obj: name object (for example: "Уфа")
-    :return: coords object
-    """
-
-    # search map URL
-    geocoder_api_server = "https://geocode-maps.yandex.ru/1.x/"
-
-    # params for search in geocode-maps
-    geocoder_params = {
-        "apikey": "40d1649f-0493-4b70-98ba-98533de7710b",
-        "geocode": obj,
-        "format": "json"}
-
-    # service call
-    response = requests.get(geocoder_api_server, params=geocoder_params)
-
-    json_response = response.json()
-
-    # cut json response
-    toponym = json_response["response"]["GeoObjectCollection"][
-        "featureMember"][0]["GeoObject"]
-
-    return list(map(float, toponym['Point']['pos'].split(' ')))
-
-
 def toponym_obj(obj: str) -> dict:
     """
     :param obj: object
@@ -81,6 +54,35 @@ def toponym_obj(obj: str) -> dict:
     return toponym
 
 
+def toponym_obj_coords(coords: Tuple[float, float]) -> dict:
+    """
+    :param obj: object
+    :return: toponym object
+    """
+    geocoder_api_server = "https://geocode-maps.yandex.ru/1.x/"
+
+    geocoder_params = {
+        "apikey": "40d1649f-0493-4b70-98ba-98533de7710b",
+        "geocode": ','.join(str(i) for i in coords),
+        "format": "json"}
+
+    response = requests.get(geocoder_api_server, params=geocoder_params)
+
+    json_response = response.json()
+    toponym = json_response["response"]["GeoObjectCollection"][
+        "featureMember"][0]["GeoObject"]
+    return toponym
+
+
+def search_coords_for_name(obj: str) -> List[float]:
+    """
+    :param obj: name object (for example: "Уфа")
+    :return: coords object
+    """
+    toponym = toponym_obj(obj)
+    return list(map(float, toponym['Point']['pos'].split(' ')))
+
+
 def address_obj(obj: str) -> str:
     """
     :param obj: object
@@ -96,4 +98,6 @@ def postal_number_obj(obj: str) -> str:
     :return: postal number address
     """
     toponym = toponym_obj(obj)
+    if 'postal_code' not in toponym['metaDataProperty']['GeocoderMetaData']['Address']:
+        return ""
     return toponym['metaDataProperty']['GeocoderMetaData']['Address']['postal_code']
