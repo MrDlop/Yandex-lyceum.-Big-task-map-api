@@ -27,16 +27,32 @@ class MyWidget(QMainWindow):
         self.point = None
         self.type_map = "map"
         self.scale = 1
+        self.idx = ""
+        self.address = ""
+        self.check = False
 
         self.pushButton_searh.clicked.connect(self.pushButton_search_clicked)
         self.pushButton_settings.clicked.connect(self.pushButton_settings_clicked)
         self.pushButton_cancel.clicked.connect(self.pushButton_cancel_clicked)
+        self.checkBox_index.stateChanged.connect(self.index_clicked)
         self.update()
 
+    def index_clicked(self, state):
+        self.check = not self.check
+        if state == Qt.Checked:
+            if not (self.point is None):
+                self.label.setText(self.address + " " + self.idx)
+        else:
+            self.label.setText(self.address)
+
     def refactor_coords(self):
-        toponym = toponym_obj(self.lineEdit_search.text())
         self.point = search_coords_for_name(self.lineEdit_search.text())
-        self.label.setText(toponym['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['AddressLine'])
+        self.address = address_obj(self.lineEdit_search.text())
+        self.idx = postal_number_obj(self.lineEdit_search.text())
+        if self.check:
+            self.label.setText(self.address + " " + self.idx)
+        else:
+            self.label.setText(self.address)
         self.coord_x, self.coord_y = self.point
         self.update()
 
@@ -58,6 +74,8 @@ class MyWidget(QMainWindow):
 
     def pushButton_cancel_clicked(self):
         self.point = None
+        self.address = ""
+        self.idx = ""
         self.label.setText("")
         self.update()
 
@@ -100,21 +118,6 @@ class MyWidget(QMainWindow):
             if self.coord_x < -90:
                 self.coord_x = 90
             self.update()
-
-    # No active prototype
-    # -------------------------------------------------------------------------------
-    def replace_type(self):
-        self.type_map = self.sender().text()
-        self.update()
-
-    def add_search(self):
-        self.point = search_coords_for_name(self.sender().text())
-        self.update()
-
-    def delete_search(self):
-        self.point = None
-        self.update()
-    # -------------------------------------------------------------------------------
 
 
 if __name__ == '__main__':
