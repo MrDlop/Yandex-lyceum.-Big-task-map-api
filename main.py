@@ -30,6 +30,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
         self.pushButton_searh.clicked.connect(self.pushButton_search_clicked)
         self.pushButton_settings.clicked.connect(self.pushButton_settings_clicked)
+        self.pushButton_cancel.clicked.connect(self.pushButton_cancel_clicked)
         self.update()
 
     def refactor_coords(self):
@@ -51,6 +52,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
     def pushButton_search_clicked(self):
         self.refactor_coords()
+        self.update()
+
+    def pushButton_cancel_clicked(self):
+        self.point = None
         self.update()
 
     def pushButton_settings_clicked(self):
