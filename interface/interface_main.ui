@@ -52,8 +52,35 @@
       <enum>QLayout::SetMaximumSize</enum>
      </property>
      <property name="spacing">
-      <number>3</number>
+      <number>4</number>
      </property>
+     <item row="1" column="1" rowspan="3" colspan="3">
+      <widget class="QLabel" name="label_map">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QCheckBox" name="checkBox_index">
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Почтовый
+индекс</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="0">
       <widget class="QPushButton" name="pushButton_cancel">
        <property name="minimumSize">
@@ -70,31 +97,6 @@
        </property>
        <property name="text">
         <string>Сброс</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QPushButton" name="pushButton_settings">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>100</width>
-         <height>60</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <family>Segoe UI</family>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Настройки</string>
        </property>
       </widget>
      </item>
@@ -145,21 +147,20 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1" rowspan="3" colspan="2">
-      <widget class="QLabel" name="label_map">
+     <item row="0" column="0">
+      <widget class="QPushButton" name="pushButton_settings">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="text">
-        <string/>
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>60</height>
+        </size>
        </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QCheckBox" name="checkBox_index">
        <property name="font">
         <font>
          <family>Segoe UI</family>
@@ -167,8 +168,14 @@
         </font>
        </property>
        <property name="text">
-        <string>Почтовый
-индекс</string>
+        <string>Настройки</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3" rowspan="4" colspan="2">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Здесь пока ничего нет&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
