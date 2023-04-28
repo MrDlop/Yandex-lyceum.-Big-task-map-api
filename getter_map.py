@@ -1,6 +1,6 @@
 from io import BytesIO
 import requests
-from typing import Tuple
+from typing import Tuple, List
 
 
 def map_for_coords(coords: Tuple[float, float],
@@ -33,7 +33,7 @@ def map_for_coords(coords: Tuple[float, float],
     return response
 
 
-def search_name(obj: str) -> Tuple[float, float]:
+def search_name(obj: str) -> List[float]:
     """
     :param obj: name object (for example: "Уфа")
     :return: coords object
@@ -57,7 +57,7 @@ def search_name(obj: str) -> Tuple[float, float]:
     toponym = json_response["response"]["GeoObjectCollection"][
         "featureMember"][0]["GeoObject"]
 
-    return toponym['Point']['pos']
+    return list(map(float, toponym['Point']['pos'].split(' ')))
 
 
 def toponym_obj(obj: str) -> dict:
