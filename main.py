@@ -98,6 +98,37 @@ class MyWidget(QMainWindow):
                 else:
                     self.label.setText(self.address)
                 self.update()
+        if event.button() == Qt.RightButton:
+            if self.label_map.width() >= event.x() - self.label_map.x() >= 0 and \
+                    self.label_map.height() >= event.y() - self.label_map.y() >= 0:
+                try:
+                    search_api_server = "https://search-maps.yandex.ru/v1/"
+                    api_key = "dda3ddba-c9ea-4ead-9010-f43fbc15c6e3"
+                    ll = ','.join(str(i) for i in search_coords_for_name(self.address))
+                    search_params = {
+                        "apikey": api_key,
+                        "text": self.address,
+                        "lang": "ru_RU",
+                        "ll": ll,
+                        "type": "biz"
+                    }
+                    response = requests.get(search_api_server, params=search_params)
+                    if response:
+                        json_response = response.json()
+                        organization = json_response["features"][0]
+                        organization_name = organization["properties"]["CompanyMetaData"]["name"]
+                        organization_address = organization["properties"]["CompanyMetaData"]["address"]
+                        self.point = search_coords_for_name(organization_address)
+                        address = toponym_obj_coords(self.point)['metaDataProperty']['GeocoderMetaData']['text']
+                        self.address = address_obj(address)
+                        self.idx = postal_number_obj(address)
+                        if self.check:
+                            self.label.setText(organization_name + " " + self.address + " " + self.idx)
+                        else:
+                            self.label.setText(organization_name + " " + self.address)
+                        self.update()
+                except:
+                    pass
 
     def pushButton_settings_clicked(self):
         self.form = SettingsForm(self)
