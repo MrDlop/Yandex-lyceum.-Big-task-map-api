@@ -21,3 +21,4 @@ class SettingsForm(Ui_Form, QWidget):
     def comboBox_map_editTextChanged(self):
         type_map = {"Спутник": "sat", "Схема": "map", "Гибрид": "sat,skl"}
         self.parent.type_map = type_map[self.comboBox_map.currentText()]
+        self.parent.update()
